@@ -17,12 +17,10 @@ import CountrySelect from "./components/country-select";
 import LeaseCard from "./components/lease-card";
 import LeaseForm from "./components/lease-form";
 import Share from "./components/share";
+import { useLocalStorage } from "usehooks-ts";
 
 export default function App() {
-  const [leases, setLeases] = useState<LeaseInput[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [leases, setLeases] = useLocalStorage<LeaseInput[]>(STORAGE_KEY, []);
 
   const formRef = useRef<HTMLDivElement>(null);
 
