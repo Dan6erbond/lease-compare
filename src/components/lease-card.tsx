@@ -67,7 +67,7 @@ export default function LeaseCard({
       <div className="p-6 border-b border-slate-50">
         <div className="flex justify-between items-start mb-4">
           <div className="space-y-1">
-            <h3 className="text-xl font-bold text-slate-800 transition-all group-hover:text-indigo-600 wrap-break-word hyphens-auto">
+            <h3 className="text-xl font-bold text-slate-800 transition-all group-hover:text-indigo-600 hyphens-auto wrap-anywhere">
               {lease.name}
             </h3>
             {lease.listingUrl && (
