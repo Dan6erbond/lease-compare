@@ -55,22 +55,22 @@ export default function App() {
 
       // Calculate IRR (Interest Rate) if not provided
       if (effectiveInterest === null && lease.monthlyPayment !== null) {
-        const netPrice = lease.price - lease.downPayment;
         const amountFinanced =
           lease.price - lease.downPayment - lease.residualValue;
+        if (amountFinanced > 0) {
+          const cashflows = [amountFinanced];
 
-        const cashflows = [amountFinanced];
+          for (let i = 0; i < lease.termMonths; i++) {
+            cashflows.push(-effectiveMonthly);
+          }
 
-        for (let i = 0; i < lease.termMonths; i++) {
-          cashflows.push(-effectiveMonthly);
-        }
+          const irr = calculateIRR(cashflows);
+          const calculatedAnnual =
+            irr !== null ? Math.pow(1 + irr, 12) - 1 : null;
 
-        const irr = calculateIRR(cashflows);
-        const calculatedAnnual =
-          irr !== null ? Math.pow(1 + irr, 12) - 1 : null;
-
-        if (calculatedAnnual !== null) {
-          effectiveInterest = calculatedAnnual;
+          if (calculatedAnnual !== null) {
+            effectiveInterest = calculatedAnnual;
+          }
         }
       }
 
@@ -79,19 +79,24 @@ export default function App() {
       const residualPercent =
         lease.price > 0 ? (lease.residualValue / lease.price) * 100 : 0;
 
-      const monthlyDepreciation =
+      const monthlyDepreciationRaw =
         (lease.price - lease.residualValue - lease.downPayment) /
         lease.termMonths;
+      const monthlyDepreciation = Math.max(0, monthlyDepreciationRaw);
+
       const depreciationPercentOfPayment =
-        (monthlyDepreciation / effectiveMonthly) * 100;
+        effectiveMonthly > 0
+          ? (monthlyDepreciation / effectiveMonthly) * 100
+          : 0;
 
       // Cost per distance (Assuming lease.annualDistance exists in LeaseInput)
       const totalDistance =
         (lease.annualDistance || 10000) * (lease.termMonths / 12);
-      const costPerDistance = totalPaid / totalDistance;
+      const costPerDistance = totalDistance > 0 ? totalPaid / totalDistance : 0;
 
       const downPaymentPercent = (lease.downPayment / lease.price) * 100;
-      const monthlyAsPercentOfPrice = (effectiveMonthly / lease.price) * 100;
+      const monthlyAsPercentOfPrice =
+        lease.price > 0 ? (effectiveMonthly / lease.price) * 100 : 0;
 
       return {
         ...lease,
