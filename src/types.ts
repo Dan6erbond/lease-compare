@@ -23,3 +23,11 @@ export interface LeaseResult extends LeaseInput {
   isBestTotalWithBuyout: boolean;
   isBestResidual: boolean;
 }
+
+export interface CountryConfig {
+  code: string;
+  name: string;
+  currency: string;
+  locale: string;
+  flag: string;
+}
