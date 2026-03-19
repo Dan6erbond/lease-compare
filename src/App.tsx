@@ -715,7 +715,7 @@ export default function App() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       referrerPolicy="no-referrer"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
                   </div>
                 )}
 
@@ -723,7 +723,7 @@ export default function App() {
                 <div className="p-6 border-b border-slate-50">
                   <div className="flex justify-between items-start mb-4">
                     <div className="space-y-1">
-                      <h3 className="text-xl font-bold text-slate-800 transition-all group-hover:text-indigo-600 break-all">
+                      <h3 className="text-xl font-bold text-slate-800 transition-all group-hover:text-indigo-600 wrap-break-word hyphens-auto">
                         {lease.name}
                       </h3>
                       {lease.listingUrl && (
@@ -766,7 +766,7 @@ export default function App() {
                 </div>
 
                 {/* Card Body */}
-                <div className="p-6 space-y-6 flex-grow">
+                <div className="p-6 space-y-6 grow">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1">
                       <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
