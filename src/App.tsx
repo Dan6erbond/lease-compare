@@ -7,6 +7,7 @@ import {
   Zap,
 } from "lucide-react";
 import { LeaseInput, LeaseResult } from "./types";
+import { STORAGE_KEY, defaultLeaseInputValues } from "./const";
 import { calculateIRR, calculateMonthlyPayment } from "./utils/calculations";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -15,7 +16,6 @@ import { AnimatePresence } from "motion/react";
 import CountrySelect from "./components/country-select";
 import LeaseCard from "./components/lease-card";
 import LeaseForm from "./components/lease-form";
-import { STORAGE_KEY } from "./const";
 import Share from "./components/share";
 
 export default function App() {
@@ -26,17 +26,9 @@ export default function App() {
 
   const formRef = useRef<HTMLDivElement>(null);
 
-  const [form, setForm] = useState<Omit<LeaseInput, "id">>({
-    name: "",
-    price: 0,
-    downPayment: 0,
-    monthlyPayment: null,
-    termMonths: 36,
-    residualValue: 0,
-    interestRate: null,
-    listingUrl: "",
-    imageUrl: "",
-  });
+  const [form, setForm] = useState<Omit<LeaseInput, "id">>(
+    defaultLeaseInputValues,
+  );
 
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -80,6 +72,19 @@ export default function App() {
       const residualPercent =
         lease.price > 0 ? (lease.residualValue / lease.price) * 100 : 0;
 
+      const monthlyDepreciation =
+        (lease.price - lease.residualValue) / lease.termMonths;
+      const depreciationPercentOfPayment =
+        (monthlyDepreciation / effectiveMonthly) * 100;
+
+      // Cost per distance (Assuming lease.annualDistance exists in LeaseInput)
+      const totalDistance =
+        (lease.annualDistance || 10000) * (lease.termMonths / 12);
+      const costPerDistance = totalPaid / totalDistance;
+
+      const downPaymentPercent = (lease.downPayment / lease.price) * 100;
+      const monthlyAsPercentOfPrice = (effectiveMonthly / lease.price) * 100;
+
       return {
         ...lease,
         effectiveMonthlyPayment: effectiveMonthly,
@@ -87,6 +92,11 @@ export default function App() {
         totalPaid,
         totalWithBuyout,
         residualPercent,
+        monthlyDepreciation,
+        depreciationPercentOfPayment,
+        costPerDistance,
+        downPaymentPercent,
+        monthlyAsPercentOfPrice,
         isBestMonthly: false,
         isBestInterest: false,
         isBestTotalPaid: false,

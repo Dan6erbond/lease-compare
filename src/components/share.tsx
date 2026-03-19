@@ -4,6 +4,7 @@ import { Save, Share2, X } from "lucide-react";
 import LZString from "lz-string";
 import { AnimatePresence, motion } from "motion/react";
 import type { LeaseInput } from "../types";
+import { defaultLeaseInputValues } from "../const";
 
 export default function Share({
   leases,
@@ -66,7 +67,9 @@ export default function Share({
   // 3. Import shared data to LocalStorage
   const acceptSharedData = () => {
     if (sharedLeases) {
-      setLeases(sharedLeases); // This will trigger your existing useEffect to save to localStorage
+      setLeases(
+        sharedLeases.map((l) => ({ ...defaultLeaseInputValues, ...l })),
+      ); // This will trigger your existing useEffect to save to localStorage
       setSharedLeases(null);
       // Clean up URL without refreshing
       window.history.replaceState({}, document.title, window.location.pathname);

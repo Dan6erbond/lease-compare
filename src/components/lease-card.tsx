@@ -1,4 +1,12 @@
-import { Edit2, ExternalLink, Trash2 } from "lucide-react";
+import {
+  AlertTriangle,
+  Edit2,
+  ExternalLink,
+  Gauge,
+  Info,
+  Trash2,
+  TrendingDown,
+} from "lucide-react";
 
 import { LeaseResult, type LeaseInput } from "../types";
 import { motion } from "motion/react";
@@ -101,6 +109,19 @@ export default function LeaseCard({
 
       {/* Card Body */}
       <div className="p-6 space-y-6 grow">
+        <div className="flex gap-2">
+          {lease.monthlyAsPercentOfPrice <= 1 && (
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-[10px] font-bold border border-emerald-100">
+              <TrendingDown size={12} /> &lt; 1% MSRP/mo
+            </div>
+          )}
+          {lease.residualPercent < 50 && (
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-[10px] font-bold border border-indigo-100">
+              <Info size={12} /> Low Residual (&lt;50%)
+            </div>
+          )}
+        </div>
+
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
@@ -126,6 +147,64 @@ export default function LeaseCard({
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-900 text-white text-[11px] font-bold rounded-lg opacity-0 group-hover/residual:opacity-100 transition-all duration-200 pointer-events-none whitespace-nowrap z-30 shadow-xl border border-slate-800 scale-95 group-hover/residual:scale-100">
                 {formatCurrency(lease.residualValue)}
                 <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          {/* Down Payment Warning (Rule 3) */}
+          {lease.downPaymentPercent > 5 && (
+            <div
+              className={`p-3 rounded-xl border flex items-start gap-3 ${
+                lease.downPaymentPercent > 10
+                  ? "bg-red-50 border-red-100 text-red-700"
+                  : "bg-amber-50 border-amber-100 text-amber-700"
+              }`}
+            >
+              <AlertTriangle size={16} className="shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <p className="text-[11px] font-bold leading-tight">
+                  High Down Payment ({lease.downPaymentPercent.toFixed(1)}%)
+                </p>
+                <p className="text-[10px] opacity-80 leading-tight">
+                  Total loss (theft/accident) could result in losing this entire
+                  payment.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Efficiency Grid: Cost per km/mile & Depreciation (Rule 4 & 5) */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                Cost / Distance
+              </p>
+              <div className="flex items-center gap-2">
+                <Gauge size={14} className="text-slate-400" />
+                <span className="text-sm font-bold">
+                  {formatCurrency(lease.costPerDistance)}
+                </span>
+              </div>
+            </div>
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                Depreciation
+              </p>
+              <div className="flex items-center gap-1">
+                <span className="text-sm font-bold">
+                  {formatCurrency(lease.monthlyDepreciation)}
+                </span>
+                <span className="text-[10px] text-slate-400">/mo</span>
+              </div>
+              <div className="w-full bg-slate-200 h-1 mt-2 rounded-full overflow-hidden">
+                <div
+                  className="bg-indigo-500 h-full"
+                  style={{
+                    width: `${Math.min(lease.depreciationPercentOfPayment, 100)}%`,
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -182,8 +261,17 @@ export default function LeaseCard({
       {/* Card Footer */}
       <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-50 mt-auto">
         <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
-          <span>{lease.termMonths} Months</span>
-          <span>{formatCurrency(lease.price)} List</span>
+          <span className="flex items-center gap-1">
+            {lease.termMonths} Months •{" "}
+            <span className="text-slate-500">
+              {(lease.annualDistance || 10000).toLocaleString()}{" "}
+              {selectedCountry.distanceUnit}/yr
+            </span>
+          </span>
+          <span className="text-slate-500">
+            {formatCurrency(lease.price)}{" "}
+            <span className="text-slate-300">List</span>
+          </span>
         </div>
       </div>
     </motion.div>

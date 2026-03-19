@@ -9,19 +9,33 @@ export interface LeaseInput {
   interestRate: number | null;
   listingUrl?: string;
   imageUrl?: string;
+  annualDistance: number;
 }
 
 export interface LeaseResult extends LeaseInput {
+  // Existing calculation results
   effectiveMonthlyPayment: number;
   effectiveInterestRate: number;
   totalPaid: number;
   totalWithBuyout: number;
-  residualPercent: number;
+  residualPercent: number; // The % of Price that is Residual
+
+  // New Analytical Fields
+  monthlyDepreciation: number; // (Price - Residual) / Term
+  depreciationPercentOfPayment: number; // % of monthly payment going to value loss
+  costPerDistance: number; // Total Paid / (Annual Distance * Years)
+  downPaymentPercent: number; // (Down Payment / Price) * 100
+  monthlyAsPercentOfPrice: number; // (Monthly / Price) * 100
+
+  // Comparison Flags (Best in Class)
   isBestMonthly: boolean;
   isBestInterest: boolean;
   isBestTotalPaid: boolean;
   isBestTotalWithBuyout: boolean;
   isBestResidual: boolean;
+
+  // New "Best" Flags for your highlights
+  isBestValuePerDistance?: boolean; // Lowest cost per km/mile
 }
 
 export interface CountryConfig {
@@ -30,4 +44,5 @@ export interface CountryConfig {
   currency: string;
   locale: string;
   flag: string;
+  distanceUnit: string;
 }

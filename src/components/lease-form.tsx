@@ -5,14 +5,21 @@ import {
   CheckCircle2,
   DollarSign,
   ExternalLink,
+  Gauge,
   Image as ImageIcon,
   Percent,
   Plus,
   TrendingDown,
 } from "lucide-react";
+import {
+  COUNTRIES,
+  CURRENCY_STORAGE_KEY,
+  defaultLeaseInputValues,
+} from "../const";
+import React, { useMemo } from "react";
 
 import { LeaseInput } from "../types";
-import React from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 const LeaseForm = React.forwardRef<
   HTMLElement,
@@ -24,7 +31,14 @@ const LeaseForm = React.forwardRef<
     setEditingId: React.Dispatch<React.SetStateAction<string | null>>;
   }
 >(({ form, setForm, setLeases, editingId, setEditingId }, ref) => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [countryCode] = useLocalStorage<string>(CURRENCY_STORAGE_KEY, "CH");
+
+  const selectedCountry = useMemo(
+    () => COUNTRIES.find((c) => c.code === countryCode) || COUNTRIES[0],
+    [countryCode],
+  );
+
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!form.name || form.price <= 0) return;
 
@@ -43,17 +57,7 @@ const LeaseForm = React.forwardRef<
       setLeases((prev) => [...prev, { ...form, id: crypto.randomUUID() }]);
     }
 
-    setForm({
-      name: "",
-      price: 0,
-      downPayment: 0,
-      monthlyPayment: null,
-      termMonths: 36,
-      residualValue: 0,
-      interestRate: null,
-      listingUrl: "",
-      imageUrl: "",
-    });
+    setForm(defaultLeaseInputValues);
   };
 
   return (
@@ -124,6 +128,33 @@ const LeaseForm = React.forwardRef<
             }
             className="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 transition-all"
           />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 flex items-center justify-between gap-2">
+            <span className="flex items-center gap-2">
+              <Gauge size={14} className="text-indigo-500" /> Annual Distance
+            </span>
+            <span className="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600">
+              {selectedCountry.distanceUnit}
+            </span>
+          </label>
+          <div className="relative">
+            <input
+              type="number"
+              placeholder={
+                selectedCountry.distanceUnit === "km" ? "10000" : "6000"
+              }
+              value={form.annualDistance || ""}
+              onChange={(e) =>
+                setForm({ ...form, annualDistance: Number(e.target.value) })
+              }
+              className="w-full bg-slate-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-indigo-500 transition-all pr-12"
+            />
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 text-xs font-bold pointer-events-none uppercase">
+              {selectedCountry.distanceUnit}/yr
+            </span>
+          </div>
         </div>
 
         <div className="space-y-2">
