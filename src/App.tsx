@@ -13,7 +13,6 @@ import { useEffect, useMemo, useState } from "react";
 import AISummary from "./components/ai-summary";
 import { AnimatePresence } from "motion/react";
 import CountrySelect from "./components/country-select";
-import ImportExport from "./components/import-export";
 import LeaseCard from "./components/lease-card";
 import LeaseForm from "./components/lease-form";
 import { STORAGE_KEY } from "./const";
@@ -144,8 +143,6 @@ export default function App() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <ImportExport leases={leases} setLeases={setLeases} />
-
             <Share leases={leases} setLeases={setLeases} />
 
             <CountrySelect />
