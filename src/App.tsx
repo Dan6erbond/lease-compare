@@ -55,14 +55,16 @@ export default function App() {
 
       // Calculate IRR (Interest Rate) if not provided
       if (effectiveInterest === null && lease.monthlyPayment !== null) {
-        const amountFinanced =
-          lease.price - lease.downPayment - lease.residualValue;
+        const amountFinanced = lease.price - lease.downPayment;
         if (amountFinanced > 0) {
           const cashflows = [amountFinanced];
 
           for (let i = 0; i < lease.termMonths; i++) {
             cashflows.push(-effectiveMonthly);
           }
+
+          // residual as balloon payment
+          cashflows[cashflows.length - 1] -= lease.residualValue;
 
           const irr = calculateIRR(cashflows);
           const calculatedAnnual =
