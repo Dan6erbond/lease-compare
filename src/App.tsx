@@ -1,4 +1,11 @@
-import { Calculator, Car } from "lucide-react";
+import {
+  ArrowRight,
+  Calculator,
+  Car,
+  ExternalLink,
+  Heart,
+  Zap,
+} from "lucide-react";
 import { LeaseInput, LeaseResult } from "./types";
 import { calculateIRR, calculateMonthlyPayment } from "./utils/calculations";
 import { useEffect, useMemo, useState } from "react";
@@ -183,7 +190,76 @@ export default function App() {
             <p className="text-lg font-medium">No lease offers added yet.</p>
           </div>
         )}
+
+        <section className="pt-12">
+          <div className="relative group overflow-hidden bg-slate-900 rounded-[2.5rem] p-8 shadow-2xl shadow-indigo-100 border border-white/10">
+            {/* Decorative Background Glow */}
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/20 blur-[100px] rounded-full group-hover:bg-indigo-500/30 transition-colors duration-500" />
+
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="space-y-4 text-center md:text-left">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-xs font-bold uppercase tracking-widest">
+                  <Zap size={12} className="fill-current" /> Next Generation
+                </div>
+                <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight">
+                  Revline <span className="text-indigo-500">1</span>
+                </h2>
+                <p className="text-slate-400 max-w-md text-lg leading-relaxed">
+                  The ultimate ecosystem for automotive enthusiasts. Track,
+                  manage, and optimize your garage in one place.
+                </p>
+              </div>
+
+              <a
+                href="https://revline.one/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/btn relative inline-flex items-center gap-3 px-8 py-4 bg-white text-slate-950 font-bold rounded-2xl hover:bg-indigo-50 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-white/5"
+              >
+                Explore Revline 1
+                <ArrowRight
+                  size={18}
+                  className="group-hover/btn:translate-x-1 transition-transform"
+                />
+              </a>
+            </div>
+          </div>
+        </section>
       </div>
+
+      <footer className="mt-24 pb-12 border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 pt-12 flex flex-col md:flex-row items-center justify-between gap-8 text-slate-500 text-sm">
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <div className="flex items-center gap-2 font-medium">
+              <span>Made with</span>
+              <Heart size={14} className="text-rose-500 fill-rose-500" />
+              <span>by</span>
+              <span className="text-slate-900 font-bold">
+                RaviAnand Mohabir
+              </span>
+            </div>
+            <p className="text-slate-400 text-xs italic">
+              Helping you drive smarter since 2026.
+            </p>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
+            <a
+              href="https://github.com/dan6erbond"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-slate-600 hover:text-indigo-600 transition-colors font-semibold group"
+            >
+              <span className="border-b border-transparent group-hover:border-indigo-600">
+                github.com/dan6erbond
+              </span>
+              <ExternalLink size={14} />
+            </a>
+            <div className="hidden md:block w-px h-4 bg-slate-300" />
+            <p className="font-medium tracking-wide">© 2026 LEASECOMPARE</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
