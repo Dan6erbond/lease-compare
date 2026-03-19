@@ -73,6 +73,7 @@ export default function AISummary({
             onClick={generateAiSummary}
             disabled={isGeneratingAi}
             className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-all disabled:opacity-50"
+            data-umami-event="generate_ai_summary"
           >
             {isGeneratingAi ? (
               <Loader2 className="animate-spin" size={16} />

@@ -82,6 +82,7 @@ export default function Share({
         onClick={handleShare}
         disabled={leases.length === 0}
         className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-2xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-all disabled:opacity-50"
+        data-umami-event="share_leases"
       >
         <Share2 size={16} className="text-indigo-500" />
         Share Leases
@@ -106,6 +107,7 @@ export default function Share({
                 <button
                   onClick={acceptSharedData}
                   className="bg-white text-indigo-600 px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-indigo-50 transition-colors"
+                  data-umami-event="accept_shared_leases"
                 >
                   <Save size={16} /> Import & Sync
                 </button>
@@ -119,6 +121,7 @@ export default function Share({
                     );
                   }}
                   className="p-2 hover:bg-indigo-500 rounded-lg transition-colors"
+                  data-umami-event="dismiss_shared_leases"
                 >
                   <X size={20} />
                 </button>

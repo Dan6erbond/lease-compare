@@ -242,6 +242,8 @@ const LeaseForm = React.forwardRef<
           <button
             type="submit"
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-indigo-200 transition-all flex items-center justify-center gap-2"
+            data-umami-event={editingId ? "update_offer" : "add_offer"}
+            data-umami-event-id={editingId || undefined}
           >
             {editingId ? <CheckCircle2 size={18} /> : <Plus size={18} />}
             {editingId ? "Update Offer" : "Add Offer"}
