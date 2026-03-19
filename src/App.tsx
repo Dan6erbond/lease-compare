@@ -37,7 +37,6 @@ export default function App() {
   const computedResults = useMemo(() => {
     const results: LeaseResult[] = leases.map((lease) => {
       let effectiveMonthly = lease.monthlyPayment || 0;
-      let effectiveInterest = (lease.interestRate || 0) / 100;
 
       // If interest rate is provided but monthly is not, calculate monthly
       if (lease.interestRate !== null && lease.monthlyPayment === null) {
@@ -51,19 +50,29 @@ export default function App() {
         });
       }
 
-      // Calculate IRR (Interest Rate) if monthly is provided (or was just calculated)
-      const netPrice = lease.price - lease.downPayment;
-      const irrCashflows = [netPrice];
-      for (let i = 0; i < lease.termMonths; i++) {
-        irrCashflows.push(-effectiveMonthly);
+      let effectiveInterest =
+        lease.interestRate !== null ? lease.interestRate / 100 : null;
+
+      // Calculate IRR (Interest Rate) if not provided
+      if (effectiveInterest === null && lease.monthlyPayment !== null) {
+        const netPrice = lease.price - lease.downPayment;
+        const amountFinanced =
+          lease.price - lease.downPayment - lease.residualValue;
+
+        const cashflows = [amountFinanced];
+
+        for (let i = 0; i < lease.termMonths; i++) {
+          cashflows.push(-effectiveMonthly);
+        }
+
+        const irr = calculateIRR(cashflows);
+        const calculatedAnnual =
+          irr !== null ? Math.pow(1 + irr, 12) - 1 : null;
+
+        if (calculatedAnnual !== null) {
+          effectiveInterest = calculatedAnnual;
+        }
       }
-      irrCashflows[irrCashflows.length - 1] -= lease.residualValue;
-
-      const irr = calculateIRR(irrCashflows);
-      const calculatedAnnual =
-        irr !== null ? Math.pow(1 + irr, 12) - 1 : effectiveInterest;
-
-      effectiveInterest = calculatedAnnual;
 
       const totalPaid = lease.downPayment + effectiveMonthly * lease.termMonths;
       const totalWithBuyout = totalPaid + lease.residualValue;
@@ -71,7 +80,8 @@ export default function App() {
         lease.price > 0 ? (lease.residualValue / lease.price) * 100 : 0;
 
       const monthlyDepreciation =
-        (lease.price - lease.residualValue) / lease.termMonths;
+        (lease.price - lease.residualValue - lease.downPayment) /
+        lease.termMonths;
       const depreciationPercentOfPayment =
         (monthlyDepreciation / effectiveMonthly) * 100;
 
