@@ -124,11 +124,27 @@ export default function LeaseCard({
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
               Effective Interest
+              {/* Show indicator if interestRate was null (meaning we calculated it) */}
+              {lease.interestRate === null && (
+                <span className="relative group/interest inline-block cursor-help">
+                  <Info
+                    size={11}
+                    className="text-indigo-400 group-hover/interest:text-indigo-600 transition-colors"
+                  />
+                  {/* Tooltip */}
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold rounded-lg opacity-0 group-hover/interest:opacity-100 transition-all duration-200 pointer-events-none whitespace-nowrap z-30 shadow-xl border border-slate-800 scale-95 group-hover/interest:scale-100 uppercase tracking-normal">
+                    Estimated based on monthly payment
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
+                  </div>
+                </span>
+              )}
             </p>
             <p
-              className={`text-lg font-bold ${lease.isBestInterest ? "text-emerald-600" : "text-slate-700"}`}
+              className={`text-lg font-bold ${
+                lease.isBestInterest ? "text-emerald-600" : "text-slate-700"
+              }`}
             >
               {formatPercent(lease.effectiveInterestRate)}
             </p>
