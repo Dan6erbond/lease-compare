@@ -1,0 +1,5 @@
+{
+  "name": "LeaseCompare",
+  "description": "A professional car lease comparison tool with IRR calculations and side-by-side analysis.",
+  "requestFramePermissions": []
+}
