@@ -14,19 +14,16 @@ import {
 import { LeaseInput } from "../types";
 import React from "react";
 
-export default function LeaseForm({
-  form,
-  setForm,
-  setLeases,
-  editingId,
-  setEditingId,
-}: {
-  form: Omit<LeaseInput, "id">;
-  setForm: React.Dispatch<React.SetStateAction<Omit<LeaseInput, "id">>>;
-  setLeases: React.Dispatch<React.SetStateAction<LeaseInput[]>>;
-  editingId: string | null;
-  setEditingId: React.Dispatch<React.SetStateAction<string | null>>;
-}) {
+const LeaseForm = React.forwardRef<
+  HTMLElement,
+  {
+    form: Omit<LeaseInput, "id">;
+    setForm: React.Dispatch<React.SetStateAction<Omit<LeaseInput, "id">>>;
+    setLeases: React.Dispatch<React.SetStateAction<LeaseInput[]>>;
+    editingId: string | null;
+    setEditingId: React.Dispatch<React.SetStateAction<string | null>>;
+  }
+>(({ form, setForm, setLeases, editingId, setEditingId }, ref) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || form.price <= 0) return;
@@ -60,7 +57,10 @@ export default function LeaseForm({
   };
 
   return (
-    <section className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 p-6 md:p-8">
+    <section
+      className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 p-6 md:p-8"
+      ref={ref}
+    >
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
@@ -229,4 +229,6 @@ export default function LeaseForm({
       </div>
     </section>
   );
-}
+});
+
+export default LeaseForm;

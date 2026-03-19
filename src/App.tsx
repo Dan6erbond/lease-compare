@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { LeaseInput, LeaseResult } from "./types";
 import { calculateIRR, calculateMonthlyPayment } from "./utils/calculations";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import AISummary from "./components/ai-summary";
 import { AnimatePresence } from "motion/react";
@@ -23,6 +23,8 @@ export default function App() {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved ? JSON.parse(saved) : [];
   });
+
+  const formRef = useRef<HTMLDivElement>(null);
 
   const [form, setForm] = useState<Omit<LeaseInput, "id">>({
     name: "",
@@ -122,6 +124,11 @@ export default function App() {
   const handleEdit = (lease: LeaseInput) => {
     setForm({ ...lease });
     setEditingId(lease.id);
+
+    formRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   const handleDelete = (id: string) => {
@@ -157,6 +164,7 @@ export default function App() {
         </header>
 
         <LeaseForm
+          ref={formRef}
           form={form}
           setForm={setForm}
           editingId={editingId}
