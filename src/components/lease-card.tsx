@@ -98,11 +98,21 @@ export default function LeaseCard({
         </div>
 
         <div className="flex items-baseline gap-2">
-          <span
-            className={`text-3xl font-black ${lease.isBestMonthly ? "text-emerald-600" : "text-slate-900"}`}
-          >
-            {formatCurrency(lease.effectiveMonthlyPayment)}
-          </span>
+          <div className="relative group/monthly inline-block">
+            <span
+              className={`text-3xl font-black cursor-help transition-colors ${
+                lease.isBestMonthly ? "text-emerald-600" : "text-slate-900"
+              }`}
+            >
+              {formatCurrency(lease.effectiveMonthlyPayment)}
+            </span>
+
+            {/* Tooltip: Shows the % of MSRP */}
+            <div className="absolute bottom-full left-0 mb-2 px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold rounded-lg opacity-0 group-hover/monthly:opacity-100 transition-all duration-200 pointer-events-none whitespace-nowrap z-30 shadow-xl border border-slate-800 scale-95 group-hover/monthly:scale-100 uppercase tracking-wider">
+              {lease.monthlyAsPercentOfPrice.toFixed(2)}% of List Price / mo
+              <div className="absolute top-full left-4 border-4 border-transparent border-t-slate-900" />
+            </div>
+          </div>
           <span className="text-slate-400 text-sm font-medium">/ month</span>
         </div>
       </div>
