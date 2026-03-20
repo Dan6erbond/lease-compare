@@ -193,16 +193,35 @@ export default function LeaseCard({
 
           {/* Efficiency Grid: Cost per km/mile & Depreciation (Rule 4 & 5) */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 relative group/dist">
               <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                Cost / Distance
+                Cost / {selectedCountry.distanceUnit}
               </p>
-              <div className="flex items-center gap-2">
-                <Gauge size={14} className="text-slate-400" />
-                <span className="text-sm font-bold">
-                  {formatCurrency(lease.costPerDistance)}
-                </span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Gauge size={14} className="text-slate-400" />
+                  <span className="text-sm font-bold">
+                    {formatCurrency(lease.costPerDistance)}
+                  </span>
+                </div>
+                {lease.additionalDistanceCost && (
+                  <span
+                    className={`text-[10px] font-bold ${lease.isExcessiveDistanceCost ? "text-red-500" : "text-emerald-500"}`}
+                  >
+                    +{formatCurrency(lease.additionalDistanceCost)} extra
+                  </span>
+                )}
               </div>
+
+              {/* Tooltip for the negotiation logic */}
+              {lease.isExcessiveDistanceCost && (
+                <div className="absolute top-full left-0 mt-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg opacity-0 group-hover/dist:opacity-100 transition-opacity z-50 shadow-xl pointer-events-none">
+                  Penalty ({formatCurrency(lease.additionalDistanceCost || 0)})
+                  is higher than base usage.
+                  <strong> Negotiate higher limit now</strong> rather than
+                  paying later.
+                </div>
+              )}
             </div>
             <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
               <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">
@@ -270,6 +289,26 @@ export default function LeaseCard({
             <span className="px-2 py-1 bg-amber-100 text-amber-700 text-[10px] font-bold uppercase tracking-wider rounded-md">
               Cheapest Buyout
             </span>
+          )}
+          {lease.monthlyAsPercentOfPrice <= 1 ? (
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-[10px] font-bold border border-emerald-100">
+              <TrendingDown size={12} /> Great Deal ({"<"}1%)
+            </div>
+          ) : lease.monthlyAsPercentOfPrice <= 2 ? (
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-50 text-blue-700 rounded-lg text-[10px] font-bold border border-blue-100">
+              <Info size={12} /> Standard Deal ({"<"}2%)
+            </div>
+          ) : lease.monthlyAsPercentOfPrice >= 4 ? (
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-red-50 text-red-700 rounded-lg text-[10px] font-bold border border-red-100">
+              <AlertTriangle size={12} /> Poor Value ({">"}4%)
+            </div>
+          ) : null}
+
+          {/* 2. Additional Distance Warning */}
+          {lease.isExcessiveDistanceCost && (
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-amber-50 text-amber-700 rounded-lg text-[10px] font-bold border border-amber-100">
+              <AlertTriangle size={12} /> High Over-Limit Fee
+            </div>
           )}
         </div>
       </div>

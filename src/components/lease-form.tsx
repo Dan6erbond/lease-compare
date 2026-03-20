@@ -158,6 +158,37 @@ const LeaseForm = React.forwardRef<
         </div>
 
         <div className="space-y-2">
+          <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center justify-between gap-2">
+            <span className="flex items-center gap-2">
+              <DollarSign size={14} /> Extra Distance Cost
+            </span>
+          </label>
+          <div className="relative">
+            <input
+              type="number"
+              step="0.01"
+              placeholder="0.25"
+              value={
+                form.additionalDistanceCost === null
+                  ? ""
+                  : form.additionalDistanceCost
+              }
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  additionalDistanceCost:
+                    e.target.value === "" ? null : Number(e.target.value),
+                })
+              }
+              className="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 transition-all pr-16"
+            />
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">
+              /{selectedCountry.distanceUnit}
+            </span>
+          </div>
+        </div>
+
+        <div className="space-y-2">
           <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
             <Percent size={14} /> Residual Value
           </label>

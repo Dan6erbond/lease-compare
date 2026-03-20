@@ -96,6 +96,10 @@ export default function App() {
       const costPerDistance =
         totalDistance > 0 ? effectiveCost / totalDistance : 0;
 
+      const isExcessiveDistanceCost =
+        !!lease.additionalDistanceCost &&
+        lease.additionalDistanceCost > costPerDistance;
+
       const downPaymentPercent = (lease.downPayment / lease.price) * 100;
       const monthlyAsPercentOfPrice =
         lease.price > 0 ? (effectiveMonthly / lease.price) * 100 : 0;
@@ -110,6 +114,7 @@ export default function App() {
         monthlyDepreciation,
         depreciationPercentOfPayment,
         costPerDistance,
+        isExcessiveDistanceCost,
         downPaymentPercent,
         monthlyAsPercentOfPrice,
         isBestMonthly: false,
