@@ -81,10 +81,8 @@ export default function App() {
       const residualPercent =
         lease.price > 0 ? (lease.residualValue / lease.price) * 100 : 0;
 
-      const monthlyDepreciationRaw =
-        (lease.price - lease.residualValue - lease.downPayment) /
-        lease.termMonths;
-      const monthlyDepreciation = Math.max(0, monthlyDepreciationRaw);
+      const monthlyDepreciation =
+        (lease.price - lease.residualValue) / lease.termMonths;
 
       const depreciationPercentOfPayment =
         effectiveMonthly > 0
@@ -94,7 +92,9 @@ export default function App() {
       // Cost per distance (Assuming lease.annualDistance exists in LeaseInput)
       const totalDistance =
         (lease.annualDistance || 10000) * (lease.termMonths / 12);
-      const costPerDistance = totalDistance > 0 ? totalPaid / totalDistance : 0;
+      const effectiveCost = totalPaid - lease.residualValue;
+      const costPerDistance =
+        totalDistance > 0 ? effectiveCost / totalDistance : 0;
 
       const downPaymentPercent = (lease.downPayment / lease.price) * 100;
       const monthlyAsPercentOfPrice =
